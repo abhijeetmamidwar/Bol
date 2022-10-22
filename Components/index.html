@@ -7,20 +7,24 @@
     <title>Chat</title>
   </head>
   <body>
-    <label for="/joinRoom"></label>
-    <form class="Visibility" action="/joinRoom" method="post">
-      <!-- <input type="text" name="name" id="" />
-      <input type="text" name="room" id="" />
-      <input type="text" name="key" id="">
-      <button type="submit" id="submit_button">Submit</button> -->
+    <label for="">Join Room</label> 
+    <form class="Visibility" >
+      <input type="text" name="Jname" id="" />
+      <input type="text" name="Jroom" id="" />
+      <input type="text" name="Jkey" id="">
+      <button id="join_submit_button">Submit</button>
     </form>
+    <label for="">Create Room</label>
+    <!-- action="/createRoom" method="post" -->
     <form class="Visibility" action="/createRoom" method="post">
-      <input type="text" name="name" id="" />
-      <input type="text" name="room" id="" />
-      <input type="text" name="key" id="">
-      <button type="submit" id="submit_button">Submit</button>
+      <input type="text" name="Cname" id="" />
+      <input type="text" name="Croom" id="" />
+      <input type="text" name="Ckey" id="">
+      <!-- <input type="submit" value=""> -->
+      <button id="create_submit_button">Submit</button>
     </form>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script src="../public/simple_client.js"></script>
   </body>
 </html>

@@ -1,3 +1,6 @@
+// REFER THIS LINK FOR EVERY CONFUSION
+// https://stackoverflow.com/questions/32674391/io-emit-vs-socket-emit
+
 const express = require("express")
 const bodyParser = require("body-parser")
 
@@ -16,44 +19,73 @@ app.use(
 );
 ///////////////// USER DEFINED FUNCTIONS /////////////
 
-const {create_Room} = require('./server_side')
+const {create_Room, check_RoomPresent} = require('./server_side')
 
-// app.get("/", (req, res) => {
-//     res.sendFile(__dirname + "/Components/home.html")
-// })
-
-app.get("/",(req, res) => {
-    res.sendFile(__dirname + '/Components/index.html')
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/Components/home.html")
 })
+
+// app.get("/",(req, res) => {
+//     res.sendFile(__dirname + '/Components/index.html')
+// })
 
 app.post("/createRoom", (req, res) => {
     console.log("Create Room Invoked");
-    const room = req.body.room
-    const user = req.body.name
-    const key = req.body.key
+    const room = req.body.Croom
+    const user = req.body.Cname
+    const key = req.body.Ckey
     let result = create_Room(room, user, key)
-    if (result) {
+    if (result.flag) {
         console.log(result);
-        // res.render("home.html", {user : user})
+        res.sendFile(__dirname + '/Components/home.html')
+    }
+    else{
+        console.log(result);
     }
 })
 
-app.post("/joinRoom", (req, res) => {
-    console.log("Join Room Invoked");
-})
 
 io.on('connection', (socket) => {
     console.log('a user connected');
+
+    socket.on('newMessage', function (data) {
+        // socket.to(`${data.room}`).emit('newMessage',{
+        //     user: data.user,
+        //     room: data.room,
+        //     text: data.text
+        // }, function () {
+        //     console.log("Error Occured", data);
+        // })
+        io.emit('newMsg', data)
+    })
+
+    // socket.on('createRoom', function (data) {
+    //     const room = data.room
+    //     const user = data.user
+    //     const key = data.key
+    //     let result = create_Room(room, user, key)
+    //     if (result.flag) {
+    //         console.log('socket', result);
+    //         socket.join(room);
+    //         // res.sendFile(__dirname + '/Components/home.html')
+    //     }
+    //     else{
+    //         console.log(result);
+    //     }
+    // })
+
+    // socket.on('join', function(data) {
+    //     console.log(data);
+    //     // socket.join(data.room);
+    // });
+
     socket.on('disconnect', function () {
         console.log("A user Disconnected");
     })
 
-    
-
-
 });
 
 
-server.listen(3000, (err) => {
+server.listen(3000, () => {
     console.log("Server Started on port 3000");
 })

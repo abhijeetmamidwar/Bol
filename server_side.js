@@ -10,17 +10,18 @@ let check_RoomPresent = function (room) {
 let create_Room = function (room, user, key) {
     if (check_RoomPresent(room)) {
         return {
+            flag : 0,
             msg : "Room Name Not Available try other one"
         }
     }
     else{
-        let temp = {}
+        let temp = {Name: "", key : "", Users : []}
         temp["Name"] = room
         temp["key"] = key
-        temp["User"] = [user]
+        temp["Users"].push(user)
         Rooms.push(temp)
-        return Rooms
+        return {flag: 1,Rooms: Rooms}
     }
 }
 
-module.exports = {create_Room}
+module.exports = {create_Room, check_RoomPresent}
