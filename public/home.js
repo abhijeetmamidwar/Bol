@@ -34,6 +34,10 @@ socket.on('newMessage', function(data) {
     // scrollToBottom();
 });
 
+socket.on('setEnvironment', function(data) {
+  document.querySelector('h3').innerText = data.user
+})
+
 socket.on('disconnect', function() {
     console.log('disconnected from server.');
 });
@@ -45,7 +49,7 @@ document.querySelector('.arrow').addEventListener('click', function (e) {
   CreateMessageAndInsert(document.querySelector('.message').value, 'sent')
   scrollToBottom();
   socket.emit('createMessage', {
-    user: params.name,
+    user: params.user,
     room: params.room,
     text: document.querySelector('.message').value
   })

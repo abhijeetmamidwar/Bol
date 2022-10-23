@@ -15,13 +15,13 @@ let io = socketIO(server);
 const {check_key, validate_name_room} = require('./appSide')
 
 app.use(express.static(publicPath));
-// app.use("/public", express.static("public"));
+
 
 io.on('connection', (socket) => {
     console.log("New User Connected");
 
     socket.on('join', (params, callback) => {
-        if(!validate_name_room(params.name, params.room)){
+        if(!validate_name_room(params.user, params.room)){
           return callback('Name and Room are required (Non Empty)');
         }
         else if (!check_key(params.key)) {
@@ -29,6 +29,8 @@ io.on('connection', (socket) => {
         }
     
         socket.join(params.room);
+        io.to(socket.id).emit('setEnvironment', {user: params.user, room:params.room})
+        // console.log(socket.id);
         // users.removeUser(socket.id);
         // users.addUser(socket.id, params.name, params.room);
     
@@ -45,10 +47,6 @@ io.on('connection', (socket) => {
         socket.broadcast.to(`${params.room}`).emit('newMessage', {user:params.user, room:params.room, text:params.text})
         // io.to(`${params.room}`).emit('newMessage', {user:params.user, room:params.room, text:params.text})
     })
-
-    // socket.emit('NewMessage', function (message) {
-    //     console.log(message);
-    // })
 
     
 
