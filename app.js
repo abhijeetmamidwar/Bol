@@ -1,91 +1,62 @@
 // REFER THIS LINK FOR EVERY CONFUSION
 // https://stackoverflow.com/questions/32674391/io-emit-vs-socket-emit
 
-const express = require("express")
-const bodyParser = require("body-parser")
-
-const app = express()
-
+const path = require('path');
 const http = require('http');
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
+const express = require('express');
+const socketIO = require('socket.io');
 
-app.use("/public", express.static("public"));
-app.use(
-    bodyParser.urlencoded({
-      extended: true,
-    })
-);
-///////////////// USER DEFINED FUNCTIONS /////////////
+const publicPath = path.join(__dirname, './public');
+let app = express();
+let server = http.createServer(app);
+let io = socketIO(server);
 
-const {create_Room, check_RoomPresent} = require('./server_side')
+// USER DEFINED //
+const {check_key, validate_name_room} = require('./appSide')
 
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/Components/home.html")
-})
-
-// app.get("/",(req, res) => {
-//     res.sendFile(__dirname + '/Components/index.html')
-// })
-
-app.post("/createRoom", (req, res) => {
-    console.log("Create Room Invoked");
-    const room = req.body.Croom
-    const user = req.body.Cname
-    const key = req.body.Ckey
-    let result = create_Room(room, user, key)
-    if (result.flag) {
-        console.log(result);
-        res.sendFile(__dirname + '/Components/home.html')
-    }
-    else{
-        console.log(result);
-    }
-})
-
+app.use(express.static(publicPath));
+// app.use("/public", express.static("public"));
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log("New User Connected");
 
-    socket.on('newMessage', function (data) {
-        // socket.to(`${data.room}`).emit('newMessage',{
-        //     user: data.user,
-        //     room: data.room,
-        //     text: data.text
-        // }, function () {
-        //     console.log("Error Occured", data);
-        // })
-        io.emit('newMsg', data)
+    socket.on('join', (params, callback) => {
+        if(!validate_name_room(params.name, params.room)){
+          return callback('Name and Room are required (Non Empty)');
+        }
+        else if (!check_key(params.key)) {
+            return callback("Wrong Room and Key Combination")
+        }
+    
+        socket.join(params.room);
+        // users.removeUser(socket.id);
+        // users.addUser(socket.id, params.name, params.room);
+    
+        // io.to(params.room).emit('updateUsersList', users.getUserList(params.room));
+        // socket.emit('newMessage', generateMessage('Admin', `Welocome to ${params.room}!`));
+    
+        // socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', "New User Joined!"));
+    
+        // callback();
     })
 
-    // socket.on('createRoom', function (data) {
-    //     const room = data.room
-    //     const user = data.user
-    //     const key = data.key
-    //     let result = create_Room(room, user, key)
-    //     if (result.flag) {
-    //         console.log('socket', result);
-    //         socket.join(room);
-    //         // res.sendFile(__dirname + '/Components/home.html')
-    //     }
-    //     else{
-    //         console.log(result);
-    //     }
+    socket.on('createMessage', function (params) {
+        // console.log(params)
+        socket.broadcast.to(`${params.room}`).emit('newMessage', {user:params.user, room:params.room, text:params.text})
+        // io.to(`${params.room}`).emit('newMessage', {user:params.user, room:params.room, text:params.text})
+    })
+
+    // socket.emit('NewMessage', function (message) {
+    //     console.log(message);
     // })
 
-    // socket.on('join', function(data) {
-    //     console.log(data);
-    //     // socket.join(data.room);
-    // });
+    
 
     socket.on('disconnect', function () {
-        console.log("A user Disconnected");
+        console.log("User Disconneted");
     })
+})
 
-});
-
-
-server.listen(3000, () => {
-    console.log("Server Started on port 3000");
+server.listen(process.env.PORT || 3000, ()=>{
+    console.log(`Server is Up and Running`);
 })
