@@ -1,17 +1,17 @@
 let socket = io();
 let params;
 
-// function scrollToBottom() {
-//   let messages = document.querySelector('.chatsnew').lastElementChild;
-//   messages.scrollIntoView();
-// }
-
-function CreateMessageAndInsert(text, sent_received) {
+function CreateMessageAndInsert(user, text, sent_received) {
+  var div = document.createElement('div')
   var p = document.createElement('p')
+  var h6 = document.createElement('h6')
+  div.className = `New_Design_for_messages ${sent_received}`
   p.innerText = text
-  p.className = sent_received
-  document.querySelector('.chatsnew').appendChild(p)
-  p.scrollIntoView()
+  h6.innerText = user
+  div.appendChild(h6)
+  div.appendChild(p)
+  document.querySelector('.chatsnew').appendChild(div)
+  div.scrollIntoView()
 }
 
 socket.on('connect', function() {
@@ -30,12 +30,12 @@ socket.on('connect', function() {
 
 socket.on('newMessage', function(data) {
     // console.log('Received at room by sender and others',data);
-    CreateMessageAndInsert(data.text, 'receive')
-    // scrollToBottom();
+    CreateMessageAndInsert(data.user, data.text, 'receive')
 });
 
 socket.on('setEnvironment', function(data) {
   document.querySelector('h3').innerText = data.user
+  CreateMessageAndInsert('Admin', data.messagefromadmin, 'sent')
 })
 
 socket.on('disconnect', function() {
@@ -46,8 +46,7 @@ socket.on('disconnect', function() {
 
 document.querySelector('.arrow').addEventListener('click', function (e) {
   e.preventDefault()
-  CreateMessageAndInsert(document.querySelector('.message').value, 'sent')
-  scrollToBottom();
+  CreateMessageAndInsert(params.user, document.querySelector('.message').value, 'sent')
   socket.emit('createMessage', {
     user: params.user,
     room: params.room,

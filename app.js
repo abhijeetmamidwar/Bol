@@ -29,7 +29,9 @@ io.on('connection', (socket) => {
         }
     
         socket.join(params.room);
-        io.to(socket.id).emit('setEnvironment', {user: params.user, room:params.room})
+        var messagefromadmin = `<p>Welcome to Chatting App</p>
+        <p>  :- Developed by Abhijeet Mamidwar</p>`
+        io.to(socket.id).emit('setEnvironment', {user: params.user, messagefromadmin: messagefromadmin, room:params.room})
         // console.log(socket.id);
         // users.removeUser(socket.id);
         // users.addUser(socket.id, params.name, params.room);
