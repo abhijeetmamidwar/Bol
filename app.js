@@ -1,6 +1,6 @@
 // REFER THIS LINK FOR EVERY CONFUSION
 // https://stackoverflow.com/questions/32674391/io-emit-vs-socket-emit
-
+require("dotenv").config()
 const path = require('path');
 const http = require('http');
 const express = require('express');
@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
         socket.join(params.room);
         rooms.adduser(socket.id, params.room)
         var messagefromadmin = `Welcome to Chatting App\n
-          :- Developed by Abhijeet Mamidwar\n`
+          :- Developed by ${process.env.PROJECTOWNER}\n`
         io.to(socket.id).emit('setEnvironment', {user: params.user, messagefromadmin: messagefromadmin, room:params.room})
         
         io.in(`${params.room}`).emit('totalmembers', rooms.total_users_in_room(params.room));
