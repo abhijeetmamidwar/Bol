@@ -28,6 +28,10 @@ socket.on('connect', function() {
   })
 });
 
+socket.on('totalmembers', function (data) {
+  document.querySelector('.totalmembers').innerText = data
+})
+
 socket.on('newMessage', function(data) {
     // console.log('Received at room by sender and others',data);
     CreateMessageAndInsert(data.user, data.text, 'receive')
@@ -36,6 +40,7 @@ socket.on('newMessage', function(data) {
 socket.on('setEnvironment', function(data) {
   document.querySelector('h3').innerText = data.user
   CreateMessageAndInsert('Admin', data.messagefromadmin, 'sent')
+  CreateMessageAndInsert('Admin', 'Chat with your friends', 'sent')
 })
 
 socket.on('disconnect', function() {
@@ -46,10 +51,14 @@ socket.on('disconnect', function() {
 
 document.querySelector('.arrow').addEventListener('click', function (e) {
   e.preventDefault()
-  CreateMessageAndInsert(params.user, document.querySelector('.message').value, 'sent')
-  socket.emit('createMessage', {
-    user: params.user,
-    room: params.room,
-    text: document.querySelector('.message').value
-  })
+  var message = document.querySelector('.message').value
+  if (message.length) {
+    CreateMessageAndInsert(params.user, message, 'sent')
+    socket.emit('createMessage', {
+      user: params.user,
+      room: params.room,
+      text: message
+    })
+  }
+  
 })

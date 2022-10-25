@@ -23,29 +23,30 @@
       href="./favicon.ico"
       type="image/x-icon"
     />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles_index.css" />
     <title>Bol</title>
   </head>
   
   <body >
-    <div >
+    <div class="outer">
       <form action="/home.html">
-        <div>
-          <h3>Join Chat</h3>
-          <div>
-            <label>Display name</label>
-            <input type="text" name="user" autofocus>
+        <div class="join">
+          <h3>BOL</h3>
+          <div class="col">
+            <label  class="row">Name</label>
+            <input  class="row" type="text" name="user" placeholder="Your Name" autofocus>
           </div>
-          <div>
-            <label>Room name</label>
-            <input type="text" name="room" autofocus>
+          <div class="col">
+            <label class="row">Room</label>
+            <input class="row" type="text" name="room" placeholder="Room Name" autofocus>
           </div>
-          <div>
-            <label>Key</label>
-            <input type="text" name="key" autofocus>
+          <div class="col">
+            <label class="row">Key</label>
+            <input class="row" type="text" name="key" placeholder="Secret Key" autofocus>
           </div>
-          <div>
-            <button>Join Chat</button>
+          <div class="row">
+            <input class="special_input col-lg-6" type="submit" name="option" value="JOIN">
+            <input class="special_input col-lg-6" type="submit" name="option" value="CREATE">
           </div>
         </div>
       </form>

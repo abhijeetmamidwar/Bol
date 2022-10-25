@@ -3,6 +3,11 @@ body {
   overflow-y: hidden;
 }
 
+#show_message{
+  font-size: 0.8rem;
+  margin-bottom: 0px;
+}
+
 .container {
   margin-top: 5%;
 }
@@ -28,6 +33,17 @@ body {
 
 .contact i:hover {
   color: rgb(231, 236, 240);
+}
+
+.totalmembers {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 2rem;
+  font-style: normal;
+  margin: 5px 10px 0px 0px;
+}
+
+.totalmembers:hover {
+  color: aliceblue;
 }
 
 .chatsnew {

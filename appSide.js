@@ -1,6 +1,8 @@
-const check_key = function (key) {
-    if (key == "0000") {
-        return true
+const check_key = function (rooms, room, key) {
+    for (let j = 0; j < rooms.length; j++) {
+        if (rooms[j]["room"] === room && rooms[j]["key"] === key) {
+            return true
+        }
     }
     return false
 }
@@ -12,4 +14,13 @@ const validate_name_room = function (user, room) {
     return false
 }
 
-module.exports = {check_key, validate_name_room}
+const create_Room = function (rooms, params) {
+    for (let j = 0; j < rooms.length; j++) {
+        if (rooms[j]["room"] == params.room) {
+            return true
+        }
+    }
+    return false
+}
+
+module.exports = {check_key, validate_name_room, create_Room}
