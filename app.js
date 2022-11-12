@@ -21,7 +21,7 @@ app.use(express.static(publicPath));
 
 
 io.on('connection', (socket) => {
-    console.log("New User Connected");
+    // console.log("New User Connected");
 
     socket.on('join', (params, callback) => {
         
@@ -68,10 +68,10 @@ io.on('connection', (socket) => {
         if(inform_others_in_room){
             io.in(`${inform_others_in_room}`).emit('totalmembers', rooms.total_users_in_room(inform_others_in_room));
         }
-        console.log("User Disconneted");
+        // console.log("User Disconneted");
     })
 })
 
 server.listen(process.env.PORT || 3000, ()=>{
-    console.log(`Server is Up and Running`);
+    console.log(`Server started on port 3000`);
 })
